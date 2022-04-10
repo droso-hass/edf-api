@@ -1,0 +1,2 @@
+class InvalidNonceException(Exception):
+    pass

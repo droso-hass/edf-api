@@ -1,0 +1,5 @@
+build
+dist
+edf_api.egg-info
+__pycache__
+*.json
