@@ -3,9 +3,9 @@ import async_timeout
 import time
 from typing import Tuple
 
-from .models import ElecInfo
-from .const import TIMEOUT, USER_AGENT
-from .auth import EDFAuth
+from edf_api.models import ElecInfo
+from edf_api.const import TIMEOUT, USER_AGENT
+from edf_api.auth import EDFAuth
 
 class EDFApi:
     """

@@ -9,9 +9,9 @@ from lxml import etree
 import urllib.parse
 from typing import Tuple
 
-from .const import TIMEOUT, USER_AGENT
-from .exc import InvalidNonceException
-from .models import Address
+from edf_api.const import TIMEOUT, USER_AGENT
+from edf_api.exc import InvalidNonceException
+from edf_api.models import Address
 
 
 class EDFAuth:
