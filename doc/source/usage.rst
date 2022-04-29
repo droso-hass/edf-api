@@ -34,7 +34,7 @@ For the first authentication, in order to obtain an access_token and a refresh_t
 This portal will then redirect to a specific url and provide the code and state parameters.
 
 By default in the function :meth:`edf_api.auth.EDFAuth.get_login_url` this url is ``edfetmoiauth:/oauthcallback`` which will raise an error in the javascript console (because the scheme is unknown).
-You can then retrieve this error and parse it (there is an example to do so in the cli.py demo file), this method allows to retrieve the data even without a server ready to receive the data from the redirection.
+You can then retrieve this error and parse it (there is an example to do so in the cli.py demo file), this is currently the only way to retrieve the result as the redirect url is restricted (any other one will be refused by the server).
 
 .. image:: _static/error.png
    :width: 600

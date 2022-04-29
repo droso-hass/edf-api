@@ -27,14 +27,17 @@ class EDFApi:
         self._refresh_token = refresh_token
         self._expiration = expiration
 
-    async def _get_access_token(self) -> str:
+    async def _get_access_token(self, force=False) -> str:
         """
         Function to get and access_token and ensure that it is valid
+
+        Args:
+            force: set to true to force the token refresh
 
         Returns:
             a valid access_token
         """
-        if self._expiration-5 < time.time():
+        if self._expiration-5 < time.time() or force:
             auth = EDFAuth(self._session)
             self._access_token, self._refresh_token, self._expiration = await auth.get_token(refresh_token=self._refresh_token)
         return self._access_token
@@ -69,7 +72,7 @@ class EDFApi:
                 return ElecInfo.from_json(req["listeCoupuresInfoReseau"][i], req["listeCrises"][i])
         return ElecInfo.no_outage()
 
-    async def get_data(self, bp_num: str, pdl: str, start: str, end: str) -> dict:
+    async def get_data(self, bp_num: str, pdl: str, start: str, end: str, retry: bool = False) -> dict:
         """
         Function to get the consumption data
 
@@ -78,8 +81,9 @@ class EDFApi:
             pdl: the PDL id
             start: the start date for the retrieved data in YYYY-MM-DD format
             end: the end date for the retrieved data in YYYY-MM-DD format
+            retry: (internal) used to know if this is the first call to this function or if this is a retry
         """
-        tok = await self._get_access_token()
+        tok = await self._get_access_token(retry)
         async with async_timeout.timeout(TIMEOUT):
             response = await self._session.get(f"https://api-edf.edelia.fr/api/v1/sites/-/load-curve?step=30&begin-date={start}&end-date={end}&withCost=true",
                 headers={
@@ -91,4 +95,9 @@ class EDFApi:
                 },
             )
             req = await response.json()
+            
+            if (("errorCode" in req and req["errorCode"] == "401") or ("status" in req and req["status"] == 401)) and not retry:
+                # try to force the access_token refresh if
+                return await self.get_data(bp_num, pdl, start, end, True)
+
         return req
