@@ -9,7 +9,7 @@ from edf_api import EDFApi, EDFAuth
 USER_FILE = "user.json"
 
 async def main():
-    session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
+    session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=1, force_close=True))
 
     if not os.path.exists(USER_FILE):
         auth = EDFAuth(session)
@@ -50,17 +50,25 @@ async def main():
             bp_num = conf["bp_num"]
             pdl = conf["pdl"]
 
-    api = EDFApi(session, access_token, refresh_token, expiration)
+    api = EDFApi(session, access_token, refresh_token, expiration, bp_num, pdl, insee)
 
     try:
         print("grid status:")
-        print(await api.get_info(insee, pdl))
+        print(await api.get_grid_info(insee, pdl))
     except:
         print("error")
 
     start = input("enter start date in YYYY-MM-DD format: ")
     end = input("enter end date in YYYY-MM-DD format: ")
-    print(await api.get_data(bp_num, pdl, start, end))
+    print(await api.get_elec_daily_data(start, end))
+    
+    start = input("enter start date in YYYY-MM format: ")
+    end = input("enter end date in YYYY-MM format: ")
+    print(await api.get_elec_monthly_data(start, end))
+    
+    start = input("enter start date in YYYY-MM format: ")
+    end = input("enter end date in YYYY-MM format: ")
+    print(await api.get_elec_monthly_data_similar_homes(start, end))
 
     with open(USER_FILE, "w") as f:
         access_token, refresh_token, expiration = api.save_tokens()

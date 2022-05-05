@@ -27,6 +27,8 @@ To retrieve the consumption data every 30min, you first need to have a connected
 
 The documentations for the available functions is available here: :doc:`edf_api`
 
+Also note that when requesting daily/hourly data, the year and month must be the same for the start and end date.
+
 First authentication
 --------------------
 
