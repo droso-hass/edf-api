@@ -136,8 +136,6 @@ class EDFApi:
         Function to get the monthly consumption data for electricity for similar homes
 
         Args:
-            bp_num: the business partner number
-            pdl: the PDL id
             start: the start date for the retrieved data in YYYY-MM format
             end: the end date for the retrieved data in YYYY-MM format
             retry: (internal) used to know if this is the first call to this function or if this is a retry
