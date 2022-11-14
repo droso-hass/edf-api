@@ -1,3 +1,5 @@
+# DEPRECATED: This repository is no longer maintained, latest tests shows that this API is working but could get your account banned
+
 # EDF API
 
 ## Description
